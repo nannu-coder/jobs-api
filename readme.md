@@ -30,7 +30,7 @@ This project uses `MongoDB` to store data.
 1. Clone the repository
 
 ```
-git clone https://github.com/username/node-express-project.git
+git clone https://github.com/nannu-coder/jobs-api
 ```
 
 2. Install dependencies
