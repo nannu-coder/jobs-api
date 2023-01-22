@@ -1,18 +1,39 @@
 const User = require("../Schemas/userSchema");
 const { StatusCodes } = require("http-status-codes");
-const badRequestError = require("../Errors/badRequest");
+const badRequest = require("../Errors/badRequest");
+const unAuthorized = require("../Errors/unAuthorized");
 
 const register = async (req, res) => {
   const user = await User.create({ ...req.body });
-  res.status(StatusCodes.CREATED).json({ user });
+
+  const token = user.createJwt();
+
+  res.status(StatusCodes.CREATED).json({ user, token });
 };
 
 const login = async (req, res) => {
-  try {
-    res.send("login user");
-  } catch (error) {
-    console.log(error);
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    throw new badRequest("Please provide email and password");
   }
+
+  const user = await User.findOne({ email });
+  const isMatchPassword = await user.comparePassword(password);
+
+  if (!isMatchPassword) {
+    throw new unAuthorized("Invalid Credentials");
+  }
+
+  if (!user) {
+    throw new unAuthorized("Invalid Credentials");
+  }
+
+  const token = user.createJwt();
+
+  res
+    .status(StatusCodes.OK)
+    .json({ name: user.name, email: user.email, token });
 };
 
 module.exports = {
