@@ -31,7 +31,6 @@ This project uses `MongoDB` to store data.
 
 ```
 git clone https://github.com/username/node-express-project.git
-
 ```
 
 2. Install dependencies
